@@ -1,33 +1,52 @@
-import { Body, Controller, Delete, Get, Post, Put, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
 import {Request} from '@nestjs/common';
 import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create_user_dto';
+import { EditUserDto } from './dto/edit_user_dto';
+import { DeleteUserDto } from './dto/delete_user_dto';
+import { SubscribeUserDto } from './dto/subscribe_user_dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller()
+//В контроллере мы просто принимаем запросы на модуль и вызываем нужный нам метод сервиса
+
+@ApiTags('User')
+@Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post("/user_add") //Добавить пользователя. Добавление логина\пароля убрано.
-  async userCreate(@Body() body: Request){
-    return await this.userService.userCreate(body);
+  @ApiOperation({ summary: 'Создать пользователя.' })
+  @Post("create") //Добавить пользователя.
+  async userCreate(@Body() userDto: CreateUserDto){
+    return await this.userService.userCreate(userDto);
   }
-  @Put("/user_edit") //Редактировать пользователя
-  async userEdit(){
-    return await this.userService.userEdit()
+
+  @ApiOperation({ summary: 'Редактировать пользователя.' })
+  @Put("edit") //Редактировать пользователя
+  async userEdit(@Body() userDto: EditUserDto){
+    return await this.userService.userEdit(userDto)
   }
-  @Delete("/user_delete") //Удалить пользователя
-  async userDelete(){
-    return await this.userService.userDelete();
+
+  @ApiOperation({ summary: 'Удалить пользователя.' })
+  @Delete("delete") //Удалить пользователя
+  async userDelete(@Body() userDto: DeleteUserDto){
+    return await this.userService.userDelete(userDto);
   }
-  @Put("/user_subscribe") //Выдача абонемента(подписки) пользователю
-  async userSubscribe(){
-    return await this.userService.userSubscribe();
+
+  @ApiOperation({ summary: 'Оформить(отключить) абонемент пользователю.' })
+  @Put("subscribe") //Выдача абонемента(подписки) пользователю
+  async userSubscribe(@Body() userDto: SubscribeUserDto){
+    return await this.userService.userSubscribe(userDto);
   }
-  @Get("/user_list")  //Список всех пользователей
+
+  @ApiOperation({ summary: 'Вывести список всех пользователей.' })
+  @Get("list")  //Список всех пользователей
   async userList(){
     return await this.userService.userList();
   }
-  @Get("/userInfo") //Информация о пользователе + список взятых книг
-  async userInfo(@Query('user_id') user_id: Request){
+
+  @ApiOperation({ summary: 'Вывести информацию о пользователе и его книгах.' })
+  @Get("info") //Информация о пользователе + список взятых книг
+  async userInfo(@Query('user_id') user_id: string){
     return await this.userService.userInfo(user_id);
   }
 }

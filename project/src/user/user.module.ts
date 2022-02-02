@@ -5,9 +5,9 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])], //Q
+  imports: [TypeOrmModule.forFeature([UserEntity])], //Подключаем Сущность через TypeOrm
   providers: [UserService],//Q
-  controllers: [//Q
+  controllers: [//Подключаем контроллер
     UserController
   ],
   exports:[UserService]//Q

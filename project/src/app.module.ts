@@ -9,7 +9,7 @@ import { UserEntity } from './user/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({  //Так в связке TypeORM-NestJS подключается бд
       type:"sqlite",
       database:"./database.db",
       entities: [
@@ -19,7 +19,7 @@ import { UserEntity } from './user/user.entity';
       synchronize: true,
       logging: false
     }),//Q
-    UserModule,
+    UserModule, //Подключаем все модули приложения
     BookModule
   ],
   controllers: [AppController,],

@@ -1,22 +1,31 @@
-import { Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { BookService } from './book.service';
+import { CreateBookDto } from './dto/create_book_dto';
+import { GetReturnDto } from './dto/get_return_book_dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller()
+//В контроллере мы просто принимаем запросы на модуль и вызываем нужный нам метод сервиса
+
+@ApiTags('Book')
+@Controller("book")
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
-  @Post("/book_add") //Добавить книгу
-  async bookAdd(){
-    return await this.bookService.bookAdd();
+  @ApiOperation({ summary: 'Добавить книгу.' })
+  @Post("create") //Добавить книгу
+  async bookAdd(@Body() bookDto:CreateBookDto){
+    return await this.bookService.bookCreate(bookDto);
   }
 
-  @Put("/book_add_to_user") //Получить кнугу пользователю
-  async bookAddToUser(){
-    return await this.bookService.bookAddToUser();
+  @ApiOperation({ summary: 'Выдать книгу пользователю.' })
+  @Put("get_book") //Получить кнугу пользователю
+  async bookAddToUser(@Body() bookDto: GetReturnDto){
+    return await this.bookService.bookGetToUser(bookDto);
   }
 
-  @Post("/book_return") //Вернуть книгу в библиотеку
-  async bookReturn(){
-    return await this.bookService.bookReturn()
+  @ApiOperation({ summary: 'Вернуть книгу от пользователя.' })
+  @Put("return_book") //Вернуть книгу в библиотеку
+  async bookReturn(@Body() bookDto: GetReturnDto){
+    return await this.bookService.bookReturn(bookDto)
   }
 }

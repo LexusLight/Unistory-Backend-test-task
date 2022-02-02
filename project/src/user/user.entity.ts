@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import {BookEntity} from '../book/book.entity';
 
+//Тут описывается модель(сущность) таблицы в виде класса.
+
 @Entity()
 export class UserEntity {
     @PrimaryGeneratedColumn()
@@ -15,15 +17,17 @@ export class UserEntity {
     @Column({default: "helicopter"})
     sex: string;
 
-    @Column()
+    @Column({default: false})
     subscription: boolean;
 
     @Column({default: 0})
     books_taken: number;
 
+    //Свя
     @OneToMany(()=>BookEntity, book => book.user, {onDelete:"SET NULL"})
     books: BookEntity[]
-    // @Column()  // Откидываем ненужные поля
+
+    // @Column()  // Для простоты выполнения, я убрал логины и пароли.
     // email: string;
     // @Column()
     // password: string;
