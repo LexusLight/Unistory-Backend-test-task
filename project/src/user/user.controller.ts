@@ -1,11 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req } from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Res} from '@nestjs/common';
 import {Request} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create_user_dto';
 import { EditUserDto } from './dto/edit_user_dto';
-import { DeleteUserDto } from './dto/delete_user_dto';
 import { SubscribeUserDto } from './dto/subscribe_user_dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {ApiOperation, ApiParam, ApiTags} from '@nestjs/swagger';
 
 //В контроллере мы просто принимаем запросы на модуль и вызываем нужный нам метод сервиса
 
@@ -15,27 +14,51 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Создать пользователя.' })
-  @Post("create") //Добавить пользователя.
-  async userCreate(@Body() userDto: CreateUserDto){
-    return await this.userService.userCreate(userDto);
+  @Post() //Добавить пользователя.
+  async userCreate(@Res() response, @Body() userDto: CreateUserDto){
+
+    try{
+      return response.status(201).send(await this.userService.userCreate(userDto));
+    }
+    catch (error){
+      return response.status(400).send(error);
+    }
   }
 
-  @ApiOperation({ summary: 'Редактировать пользователя.' })
-  @Put("edit") //Редактировать пользователя
-  async userEdit(@Body() userDto: EditUserDto){
-    return await this.userService.userEdit(userDto)
+  @ApiOperation({ summary: 'Редактировать пользователя.'})
+  @Put(":username") //Редактировать пользователя
+  @ApiParam({name: 'username', required: true})
+  async userEdit(@Res() response, @Param("username") username, @Body() userDto: EditUserDto){
+    try{
+      return response.status(200).send( await this.userService.userEdit(username,userDto));
+    }
+    catch (error){
+      return response.status(400).send(error);
+    }
   }
 
   @ApiOperation({ summary: 'Удалить пользователя.' })
-  @Delete("delete") //Удалить пользователя
-  async userDelete(@Body() userDto: DeleteUserDto){
-    return await this.userService.userDelete(userDto);
+  @Delete(":username") //Удалить пользовател
+  @ApiParam({name: 'username', required: true})
+  async userDelete(@Res() response, @Param("username") username){
+    try{
+      return response.status(200).send( await this.userService.userDelete(username));
+    }
+    catch (error){
+      return response.status(400).send(error);
+    }
   }
 
   @ApiOperation({ summary: 'Оформить(отключить) абонемент пользователю.' })
   @Put("subscribe") //Выдача абонемента(подписки) пользователю
-  async userSubscribe(@Body() userDto: SubscribeUserDto){
-    return await this.userService.userSubscribe(userDto);
+  async userSubscribe(@Res() response, @Body() userDto: SubscribeUserDto){
+    console.log("hel");
+    try{
+      return response.status(200).send(await this.userService.userSubscribe(userDto));
+    }
+    catch (error){
+      return response.status(400).send(error);
+    }
   }
 
   @ApiOperation({ summary: 'Вывести список всех пользователей.' })
@@ -46,7 +69,12 @@ export class UserController {
 
   @ApiOperation({ summary: 'Вывести информацию о пользователе и его книгах.' })
   @Get("info") //Информация о пользователе + список взятых книг
-  async userInfo(@Query('user_id') user_id: string){
-    return await this.userService.userInfo(user_id);
+  async userInfo(@Res() response,@Query('user_id') user_id: string){
+    try{
+      return response.status(200).send( await this.userService.userInfo(user_id));
+    }
+    catch (error){
+      return response.status(400).send(error);
+    }
   }
 }

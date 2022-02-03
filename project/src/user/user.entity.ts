@@ -23,7 +23,6 @@ export class UserEntity {
     @Column({default: 0})
     books_taken: number;
 
-    //Свя
     @OneToMany(()=>BookEntity, book => book.user, {onDelete:"SET NULL"})
     books: BookEntity[]
 

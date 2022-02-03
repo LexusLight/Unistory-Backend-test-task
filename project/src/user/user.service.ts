@@ -4,10 +4,10 @@ import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create_user_dto';
 import { EditUserDto } from './dto/edit_user_dto';
-import { DeleteUserDto } from './dto/delete_user_dto';
 import { SubscribeUserDto } from './dto/subscribe_user_dto';
 
 //В основном методы похожи, так что я прокомментировал первый.
+// P.S. В параметраз запроса я использовал username(вместо id) для наглядности
 
 @Injectable()
 export class UserService{
@@ -23,37 +23,37 @@ export class UserService{
     let user:UserEntity = await this.userRepository.findOne({username:username});
     //Если объект найден, значит этот пользователь уже был создан.
     if(user != null){
-      return ("Пользователь с таким юзернеймом уже существует.")
+      throw ("Пользователь с таким юзернеймом уже существует.")
     }else {
-    //Если такого пользователя нет, то создаём новую сущность и сохраняем её
+    //Если такого пользователя нет, то создаём новый объект сущности и сохраняем его
       user = new UserEntity();
       user.username = username;
       user.age = age;
       user.sex = sex;
       await this.userRepository.save(user);
-      return (user.username + " успешно создан!")
+      return (user)
     }
   }
 
-  async userEdit(dto: EditUserDto){
-    const {old_username,new_username,new_age,new_sex} = dto;
-    const user:UserEntity = await this.userRepository.findOne({username:old_username});
-    if(user == null){
-      return ("Пользователя с таким юзернеймом не существует.")
-    }else {
-      user.username = new_username;
-      user.age = new_age;
-      user.sex = new_sex;
-      await this.userRepository.save(user);
-      return (user.username + " изменён!")
-    }
-  }
-
-  async userDelete(dto:DeleteUserDto){
-    const {username} = dto;
+  async userEdit(username,dto: EditUserDto){
+    const {new_username,new_age,new_sex} = dto;
     const user:UserEntity = await this.userRepository.findOne({username:username});
     if(user == null){
-      return ("Пользователя с таким юзернеймом не существует.")
+      throw ("Пользователя с таким юзернеймом не существует.")
+    }else {
+      //Если какого-либо из необязательных параметров нет, то мы его оставляем прежним
+      user.username = new_username ? new_username : username;
+      user.age = new_age ? new_age : user.age;
+      user.sex = new_sex ? new_sex : user.sex;
+      await this.userRepository.save(user);
+      return (user)
+    }
+  }
+
+  async userDelete(username){
+    const user:UserEntity = await this.userRepository.findOne({username:username});
+    if(user == null){
+      throw ("Пользователя с таким юзернеймом не существует.")
     }else {
       await this.userRepository.delete(user);
       return (user.username + " удалён!")
@@ -64,7 +64,7 @@ export class UserService{
     const {username,subscribe} = dto;
     const user:UserEntity = await this.userRepository.findOne({username:username});
     if(user == null){
-      return ("Пользователя с таким юзернеймом не существует.")
+      throw ("Пользователя с таким юзернеймом не существует.")
     }else {
       user.subscription = subscribe;
       await this.userRepository.save(user);
@@ -77,7 +77,7 @@ export class UserService{
   async userInfo(user_id:any){
     const user = await this.userRepository.findOne({username: user_id},{relations: ["books"]})
     if (user == null){
-      return ("Пользователя не существует");
+      throw ("Пользователя не существует");
     }else{
       return user
     }

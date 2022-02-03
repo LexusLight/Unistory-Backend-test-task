@@ -6,6 +6,8 @@ import { CreateBookDto } from './dto/create_book_dto';
 import { UserEntity } from '../user/user.entity';
 import { GetReturnDto } from './dto/get_return_book_dto';
 
+// P.S. В параметраз запроса я использовал username(вместо id) для наглядности
+
 @Injectable()
 export class BookService{
   constructor(
@@ -17,16 +19,20 @@ export class BookService{
   {}
 
   async bookCreate(dto:CreateBookDto){
+    //Деструктурируем объект по свойствам
     const {title,about} = dto;
+    //Пытаемся найти в базе книгу с таким-же названием
     let book:BookEntity = await this.bookRepository.findOne({title:title});
+    //Если объект найден, значит этот пользователь уже был создан.
     if(book != null){
-      return ("Книга с таким названием уже существует.")
+      throw ("Книга с таким названием уже существует.")
     }else {
+      //Если такой книги нет, то создаём новый объект сущности и сохраняем его
       book = new BookEntity();
       book.title = title;
       book.about = about;
       await this.bookRepository.save(book);
-      return ("Книга " + book.title + " была успешно добавлена!");
+      return book;
     }
   }
   async bookGetToUser(dto : GetReturnDto){
@@ -34,17 +40,16 @@ export class BookService{
     const book:BookEntity = await this.bookRepository.findOne({title:title});
     const user:UserEntity = await this.userRepository.findOne({username:username},{relations:["books"]});
     if(book == null){
-      return ("Книги с таким названием не существует.")
+      throw ("Книги с таким названием не существует.")
     }else if(user == null){
-      return ("Пользователя с таким юзернеймом не существует.")
+      throw ("Пользователя с таким юзернеймом не существует.")
     }else if(user.books_taken >= 5){
-      return ("Пользователь не может взять более 5 книг.")
+      throw ("Пользователь не может взять более 5 книг.")
     }else if(!user.subscription){
-      return ("У пользователя нет абонимента.")
+      throw ("У пользователя нет абонимента.")
     }else if(!book.available){
-      return ("Книгу уже кто-то взял. Попробуйте другую.")
+      throw ("Книгу уже кто-то взял. Попробуйте другую.")
     }else{
-      console.log(user.books);
       user.books.push(book);
       user.books_taken++;
       book.available = false;
@@ -59,11 +64,11 @@ export class BookService{
     const book:BookEntity = await this.bookRepository.findOne({title:title});
     const user:UserEntity = await this.userRepository.findOne({username:username},{relations:["books"]});
     if(book == null){
-      return ("Книги с таким названием не существует.")
+      throw ("Книги с таким названием не существует.")
     }else if(user == null){
-      return ("Пользователя с таким юзернеймом не существует.")
+      throw ("Пользователя с таким юзернеймом не существует.")
     }else if(!user.books.find(element => element.title==book.title)){
-      return ("У данного пользователя нет данной книги.")
+      throw ("У данного пользователя нет данной книги.")
     }
     else{
       user.books.splice(user.books.indexOf(book));
