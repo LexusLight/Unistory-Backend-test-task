@@ -71,11 +71,12 @@ export class UserService{
       return (user.username + ` теперь ${(!subscribe)?"не":""} имеет абонемент!`)
     }
   }
+
   async userList(){
     return await this.userRepository.find()
   }
-  async userInfo(user_id:any){
-    const user = await this.userRepository.findOne({username: user_id},{relations: ["books"]})
+  async userInfo(username:string){
+    const user = await this.userRepository.findOne({username: username},{relations: ["books"]})
     if (user == null){
       throw ("Пользователя не существует");
     }else{

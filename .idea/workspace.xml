@@ -20,14 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b41f635-d195-43d4-a5f6-395afc76c7b5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/database.db" beforeDir="false" afterPath="$PROJECT_DIR$/project/database.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/app.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/app.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/book/book.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/book/book.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/book/book.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/book/book.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/user/dto/delete_user_dto.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/user/dto/edit_user_dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/user/dto/edit_user_dto.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/user/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/user/user.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/user/user.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/user/user.entity.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/user/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/user/user.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -64,6 +59,7 @@
       <option name="presentableId" value="Default" />
       <updated>1643873600898</updated>
       <workItem from="1643873603237" duration="7134000" />
+      <workItem from="1643881343372" duration="1615000" />
     </task>
     <servers />
   </component>
@@ -80,5 +76,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

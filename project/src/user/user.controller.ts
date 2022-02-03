@@ -16,9 +16,19 @@ export class UserController {
   @ApiOperation({ summary: 'Создать пользователя.' })
   @Post() //Добавить пользователя.
   async userCreate(@Res() response, @Body() userDto: CreateUserDto){
-
     try{
       return response.status(201).send(await this.userService.userCreate(userDto));
+    }
+    catch (error){
+      return response.status(400).send(error);
+    }
+  }
+
+  @ApiOperation({ summary: 'Оформить(отключить) абонемент пользователю.' })
+  @Put("subscribe") //Выдача абонемента(подписки) пользователю
+  async userSubscribe(@Res() response, @Body() userDto: SubscribeUserDto){
+    try{
+      return response.status(200).send(await this.userService.userSubscribe(userDto));
     }
     catch (error){
       return response.status(400).send(error);
@@ -49,17 +59,7 @@ export class UserController {
     }
   }
 
-  @ApiOperation({ summary: 'Оформить(отключить) абонемент пользователю.' })
-  @Put("subscribe") //Выдача абонемента(подписки) пользователю
-  async userSubscribe(@Res() response, @Body() userDto: SubscribeUserDto){
-    console.log("hel");
-    try{
-      return response.status(200).send(await this.userService.userSubscribe(userDto));
-    }
-    catch (error){
-      return response.status(400).send(error);
-    }
-  }
+
 
   @ApiOperation({ summary: 'Вывести список всех пользователей.' })
   @Get("list")  //Список всех пользователей
@@ -68,10 +68,11 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Вывести информацию о пользователе и его книгах.' })
-  @Get("info") //Информация о пользователе + список взятых книг
-  async userInfo(@Res() response,@Query('user_id') user_id: string){
+  @Get(":username") //Информация о пользователе + список взятых книг
+  @ApiParam({name: 'username', required: true})
+  async userInfo(@Res() response,@Param('username') username: string){
     try{
-      return response.status(200).send( await this.userService.userInfo(user_id));
+      return response.status(200).send( await this.userService.userInfo(username));
     }
     catch (error){
       return response.status(400).send(error);
